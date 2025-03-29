@@ -15,5 +15,10 @@ This template is using Tailwind CSS v3.4.3
 
 execute it with:  npm run dev
 
-test
+to build the whole project use:
+npm run build
+
+to deploy everything use 
+firebase deploy
+
 
