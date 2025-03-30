@@ -18,6 +18,8 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -41,6 +43,8 @@ export default function App() {
 
   return (
     <Router>
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="min-h-screen bg-gray-100">
         <nav className="bg-white shadow px-4 py-2 flex justify-between items-center">
           <div className="flex gap-4">
@@ -124,7 +128,6 @@ function Login({ user, authLoading }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false);
-  const [formError, setFormError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -155,24 +158,26 @@ function Login({ user, authLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormError('');
     if (!validateForm()) return;
     try {
       if (isSignup) {
         await createUserWithEmailAndPassword(auth, email, password);
+        toast.success("Account created!");
       } else {
         await signInWithEmailAndPassword(auth, email, password);
+        toast.success("Signed in!");
       }
     } catch (err) {
-      setFormError(err.message);
+      toast.error(err.message);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      toast.success("Signed in with Google!");
     } catch (err) {
-      setFormError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -202,8 +207,6 @@ function Login({ user, authLoading }) {
     <form onSubmit={handleSubmit} className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-100 px-4">
       <div className="w-full max-w-sm bg-white p-6 rounded shadow">
         <h1 className="text-2xl font-bold mb-4">{isSignup ? 'Sign Up' : 'Login'}</h1>
-
-        {formError && <div className="mb-4 text-red-600 text-sm">{formError}</div>}
 
         <div className="mb-4">
           <input
@@ -241,7 +244,6 @@ function Login({ user, authLoading }) {
           className="text-sm text-indigo-600 underline w-full"
           onClick={() => {
             setIsSignup(!isSignup);
-            setFormError('');
             setFieldErrors({});
             setConfirmPassword('');
           }}

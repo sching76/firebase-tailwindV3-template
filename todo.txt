@@ -6,6 +6,11 @@ https://console.firebase.google.com/u/0/?_gl=1*1sp4qmt*_ga*MjY5NjgxMTI3LjE3NDEyM
 
 
 Todos:
+Use toast.promise() to show loading → success/fail
+
+Add different styles for login, logout, signup
+
+Group toasts by action type (e.g., auth, profile updates)
 
 Update profile info (name/photo)
 
