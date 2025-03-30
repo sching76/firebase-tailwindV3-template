@@ -31,6 +31,18 @@ add user roles
 
 split pages
 
+email confirmation
+
+telephone authentication 
+
+Custom domain
+
+Preview URLs per branch
+
+Add .env.production for deploys
+
+Add GitHub Actions with different environments
+
 ------------------------------------------------------------------------
 Done:
 
