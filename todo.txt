@@ -1,0 +1,40 @@
+https://chatgpt.com/
+https://github.com/
+
+Firebase:
+https://console.firebase.google.com/u/0/?_gl=1*1sp4qmt*_ga*MjY5NjgxMTI3LjE3NDEyMDU2MDc.*_ga_CW55HF8NVT*MTc0MzMwNzkzMC4yOC4wLjE3NDMzMDc5MzAuMC4wLjA.
+
+
+Todos:
+
+Update profile info (name/photo)
+
+Store custom user data in Firestore
+
+Add editable profile fields
+
+Style it with Tailwind cards, badges, or animations
+
+Add a fancier loading indicator (like a spinner or animation)
+
+Disable the submit button while logging in
+
+Saving the last used login tab (signup/login)
+
+Styling the form more like a modal or card layout
+
+add user roles
+
+split pages
+
+create env file
+
+Add toast notifications:
+https://fkhadra.github.io/react-toastify/introduction/
+
+
+Done:
+email login  
+google login  
+
+
