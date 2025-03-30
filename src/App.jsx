@@ -21,11 +21,23 @@ import './App.css';
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, setUser);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
     return () => unsubscribe();
   }, []);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-lg">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -34,6 +46,7 @@ export default function App() {
           <div className="flex gap-4">
             <Link to="/" className="text-indigo-600 font-bold">Home</Link>
             {user && <Link to="/dashboard" className="text-indigo-600">Dashboard</Link>}
+            {user && <Link to="/profile" className="text-indigo-600">Profile</Link>}
           </div>
           {user ? (
             <button onClick={() => signOut(auth)} className="text-sm text-red-600">Logout</button>
@@ -44,10 +57,15 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login user={user} />} />
+          <Route path="/login" element={<Login user={user} authLoading={authLoading} />} />
           <Route path="/dashboard" element={
             <ProtectedRoute user={user}>
               <Dashboard user={user} />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute user={user}>
+              <Profile user={user} />
             </ProtectedRoute>
           } />
         </Routes>
@@ -72,11 +90,36 @@ function Dashboard({ user }) {
   );
 }
 
+function Profile({ user }) {
+  const photoURL = user?.photoURL;
+  const displayName = user?.displayName;
+  const email = user?.email;
+  const uid = user?.uid;
+  const provider = user?.providerData?.[0]?.providerId;
+
+  return (
+    <div className="p-6 max-w-md mx-auto bg-white shadow rounded text-center">
+      <h2 className="text-2xl font-bold text-indigo-700 mb-4">User Profile</h2>
+      {photoURL && (
+        <img
+          src={photoURL}
+          alt="Profile"
+          className="w-24 h-24 rounded-full mx-auto mb-4"
+        />
+      )}
+      <p className="text-gray-700 mb-2"><strong>Name:</strong> {displayName || 'N/A'}</p>
+      <p className="text-gray-700 mb-2"><strong>Email:</strong> {email}</p>
+      <p className="text-gray-700 mb-2"><strong>UID:</strong> {uid}</p>
+      <p className="text-gray-700"><strong>Provider:</strong> {provider}</p>
+    </div>
+  );
+}
+
 function ProtectedRoute({ user, children }) {
   return user ? children : <Navigate to="/login" />;
 }
 
-function Login({ user }) {
+function Login({ user, authLoading }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -85,6 +128,14 @@ function Login({ user }) {
   const [fieldErrors, setFieldErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-lg">
+        Loading...
+      </div>
+    );
+  }
 
   if (user) return <Navigate to="/dashboard" />;
 
