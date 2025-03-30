@@ -20,6 +20,8 @@ import {
 import './App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from './firebase';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -161,8 +163,18 @@ function Login({ user, authLoading }) {
     if (!validateForm()) return;
     try {
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        toast.success("Account created!");
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Store custom user data in Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          email: user.email,
+          createdAt: serverTimestamp(),
+          provider: user.providerData[0]?.providerId || 'email'
+        });
+
+        toast.success("Account created and saved!");
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         toast.success("Signed in!");
@@ -174,7 +186,23 @@ function Login({ user, authLoading }) {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      //await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      const userRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(userRef);
+      if (!docSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          createdAt: serverTimestamp(),
+          provider: user.providerData[0]?.providerId || 'google.com'
+        });
+      }
+
       toast.success("Signed in with Google!");
     } catch (err) {
       toast.error(err.message);

@@ -4,6 +4,7 @@ https://github.com/
 Firebase:
 https://console.firebase.google.com/u/0/?_gl=1*1sp4qmt*_ga*MjY5NjgxMTI3LjE3NDEyMDU2MDc.*_ga_CW55HF8NVT*MTc0MzMwNzkzMC4yOC4wLjE3NDMzMDc5MzAuMC4wLjA.
 
+------------------------------------------------------------------------
 
 Todos:
 Use toast.promise() to show loading → success/fail
@@ -13,8 +14,6 @@ Add different styles for login, logout, signup
 Group toasts by action type (e.g., auth, profile updates)
 
 Update profile info (name/photo)
-
-Store custom user data in Firestore
 
 Add editable profile fields
 
@@ -32,14 +31,16 @@ add user roles
 
 split pages
 
-create env file
+------------------------------------------------------------------------
+Done:
 
 Add toast notifications:
 https://fkhadra.github.io/react-toastify/introduction/
 
-
-Done:
 email login  
-google login  
+google login
+create env file
+Store custom user data in Firestore
+
 
 
